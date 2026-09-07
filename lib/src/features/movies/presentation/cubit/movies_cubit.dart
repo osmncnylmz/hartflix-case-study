@@ -10,12 +10,11 @@ class MoviesCubit extends Cubit<MoviesState> {
   final MoviesRepository _repo = getIt<MoviesRepository>();
   MoviesCubit() : super(const MoviesState.initial());
 
-  // Dahili liste ve sayfa bilgisi
+  // State'teki liste unmodifiable kopya; birikimi burada tutuyoruz.
   final List<MovieDto> _items = [];
   int _page = 1;
   int _maxPage = 1;
 
-  /// İlk sayfayı yükle (Explore açılış + Pull-to-refresh sonrası)
   Future<void> loadFirstPage() async {
     emit(state.copyWith(loading: true, loadingMore: false));
 
@@ -36,14 +35,13 @@ class MoviesCubit extends Cubit<MoviesState> {
         ),
       );
 
-      // Sonraki çağrılar için sayaç
+      // _page hep "sıradaki" sayfayı gösterir, son yüklenen değil.
       _page = (_page < _maxPage) ? _page + 1 : _page;
     } catch (_) {
       emit(state.copyWith(loading: false));
     }
   }
 
-  /// Sonsuz kaydırma: sonraki sayfayı ekle
   Future<void> loadNextPage() async {
     if (state.loadingMore || !state.hasMore) return;
 
@@ -72,13 +70,11 @@ class MoviesCubit extends Cubit<MoviesState> {
     }
   }
 
-  /// Pull-to-refresh
   Future<void> refresh() async {
     await loadFirstPage();
     await hydrateFavorites();
   }
 
-  /// Rastgele filmler (başka ekranlar için)
   Future<void> loadRandom({int count = 6}) async {
     if (state.loading) return;
     emit(state.copyWith(loading: true, loadingMore: false));
@@ -105,14 +101,9 @@ class MoviesCubit extends Cubit<MoviesState> {
     }
   }
 
-  /// Favori toggle
-  ///
-  /// [MoviesRepository.toggleFavorite] returns the *new* state (`true` when the
-  /// movie is now a favourite), so it is applied directly instead of being
-  /// treated as a success flag — reading it as "did it work?" meant an
-  /// un-favourite left the id in [MoviesState.favIds].
-  /// Errors are left to propagate: the Explore page rolls its optimistic
-  /// change back when this throws.
+  /// Repo yeni durumu döner, başarı flag'i değil; success diye okunduğu sürece
+  /// favoriden çıkarma favIds'de iz bırakıyordu. Hata bilerek yukarı gidiyor,
+  /// geri almayı ExplorePage yapıyor.
   Future<void> toggleFavorite(String movieId) async {
     final isFavoriteNow = await _repo.toggleFavorite(movieId);
 
@@ -125,7 +116,6 @@ class MoviesCubit extends Cubit<MoviesState> {
     emit(state.copyWith(favIds: favs));
   }
 
-  /// Favorileri doldur
   Future<void> hydrateFavorites() async {
     try {
       final favs = await _repo.favorites();
@@ -135,7 +125,7 @@ class MoviesCubit extends Cubit<MoviesState> {
     }
   }
 
-  /// Favoriler sayfası (tam liste)
+  /// Favoriler sayfası: listeyi tamamen favorilerle değiştirir.
   Future<void> loadFavorites() async {
     emit(state.copyWith(loading: true, loadingMore: false));
     try {

@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../movies/presentation/cubit/movies_cubit.dart';
 import '../../../movies/data/models/movie_dto.dart';
+import '../../../movies/presentation/movie_display.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({super.key});
@@ -261,9 +262,9 @@ class _ExplorePageState extends State<ExplorePage>
   }
 
   void _showDetails(BuildContext context, MovieDto m) {
-    final title = _safeTitle(m);
-    final desc = _safeDesc(m);
-    final imgs = _safeImages(m);
+    final title = m.displayTitle;
+    final desc = m.description.trim();
+    final imgs = m.images.where((e) => e.isNotEmpty).toList();
 
     showModalBottomSheet(
       context: context,
@@ -303,7 +304,7 @@ class _ExplorePageState extends State<ExplorePage>
                           itemBuilder: (_, i) => ClipRRect(
                             borderRadius: BorderRadius.circular(12),
                             child: CachedNetworkImage(
-                              imageUrl: _fixUrl(imgs[i]),
+                              imageUrl: httpsUrl(imgs[i]),
                               fit: BoxFit.cover,
                               width: 240,
                               height: 160,
@@ -329,62 +330,6 @@ class _ExplorePageState extends State<ExplorePage>
       },
     );
   }
-}
-
-/// Yardımcılar (null-safe & güvenli URL)
-
-String _safeTitle(MovieDto m) {
-  try {
-    final t = m.title.trim();
-    return t.isEmpty ? '—' : t;
-  } catch (_) {
-    return '—';
-  }
-}
-
-String _safeDesc(MovieDto m) {
-  try {
-    final d = m.description.trim();
-    return d;
-  } catch (_) {
-    return '';
-  }
-}
-
-List<String> _safeImages(MovieDto m) {
-  try {
-    final list = m.images;
-    return list.where((e) => e.isNotEmpty).toList();
-  } catch (_) {
-    return const <String>[];
-  }
-}
-
-/// http -> https
-String _fixUrl(String url) {
-  if (url.startsWith('http://')) return url.replaceFirst('http://', 'https://');
-  return url;
-}
-
-/// IMDB eski hostları 403 verebiliyor; https zorunlu; poster→images fallback
-String? _bestPoster(MovieDto m) {
-  final List<String> imgs = _safeImages(m);
-  final String poster = m.posterUrl.trim();
-
-  final candidates = <String>[if (poster.isNotEmpty) poster, ...imgs];
-
-  for (final raw in candidates) {
-    final fixed = _fixUrl(raw);
-    final uri = Uri.tryParse(fixed);
-    if (uri == null) continue;
-    if (uri.scheme != 'https') continue;
-
-    final host = uri.host.toLowerCase();
-    if (host.contains('ia.media-imdb.com')) continue; // 403’leri atla
-
-    return fixed;
-  }
-  return null;
 }
 
 class _HeroCard extends StatefulWidget {
@@ -415,9 +360,9 @@ class _HeroCardState extends State<_HeroCard> {
       context,
     ).textTheme.bodyMedium?.copyWith(color: Colors.white.withValues(alpha: .9));
 
-    final posterOrFallback = _bestPoster(widget.movie);
-    final title = _safeTitle(widget.movie);
-    final desc = _safeDesc(widget.movie);
+    final posterOrFallback = widget.movie.bestPosterUrl;
+    final title = widget.movie.displayTitle;
+    final desc = widget.movie.description.trim();
 
     return Stack(
       fit: StackFit.expand,

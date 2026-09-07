@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/services.dart';
 import 'src/app/di/injection.dart';
 import 'src/app/router/app_router.dart';
-import 'src/app/bloc_observer/app_bloc_observer.dart';
 import 'src/features/auth/presentation/bloc/auth_cubit.dart';
 import 'src/shared/styles/sinflix_theme.dart';
 
@@ -20,7 +19,6 @@ void main() async {
     ),
   );
 
-  Bloc.observer = AppBlocObserver();
   await configureDependencies();
 
   runApp(const SinflixApp());

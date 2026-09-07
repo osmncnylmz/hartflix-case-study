@@ -36,11 +36,9 @@ class MovieService {
     );
   }
 
-  /// Explore için: rastgele [count] film döndürür, tekrarsız.
-  /// - Farklı sayfalardan çeker
-  /// - posterUrl boş/bozuk olanları eler
+  /// Rastgele [count] film. Tek sayfa yetmediği için farklı sayfalara
+  /// dağılır; postersizler elenir, aynı id iki kez girmez.
   Future<List<MovieDto>> randomMovies({int count = 6}) async {
-    // 1) Toplam sayfayı öğren
     final first = await listMovies(page: 1);
     final totalPages = first.totalPages <= 0 ? 1 : first.totalPages;
 
@@ -50,19 +48,17 @@ class MovieService {
 
     bool accept(MovieDto m) {
       final poster = (m.posterUrl).toString().trim();
-      // Poster boş olmasın ve aynı id bir kez gelsin
       return poster.isNotEmpty && seenIds.add(m.id);
     }
 
-    // 2) İlk sayfadakileri karıştırıp kullan
     final seed = [...first.movies]..shuffle(rnd);
     for (final m in seed) {
       if (accept(m)) picked.add(m);
       if (picked.length == count) return picked;
     }
 
-    // 3) Eksik kalırsa rastgele sayfalardan tamamla
-    // Güvenlik: Çok boş veri gelirse sonsuz döngüye girmesin diye
+    // Eksik kalanı rastgele sayfalardan tamamla. safety olmazsa, çoğu sayfası
+    // postersiz gelen bir katalogda while sonsuza kadar dönüyor.
     int safety = totalPages * 2 + 4;
 
     while (picked.length < count && safety-- > 0) {
@@ -118,12 +114,9 @@ class ToggleFavoriteEnvelope {
   ToggleFavoriteEnvelope({required this.movie, required this.action});
 
   factory ToggleFavoriteEnvelope.fromJson(Map<String, dynamic> json) {
-    // `MovieService.toggleFavorite` hands this an already-unwrapped body:
-    // `unwrapData` has stripped the `{"response": ..., "data": ...}` envelope,
-    // exactly as it does for `MovieListEnvelope`. Unwrapping a second time here
-    // used to leave `action` permanently empty, so `toggleFavorite` always
-    // reported "not favorited". Accept both shapes so the parser is correct
-    // whether or not the envelope has already been removed.
+    // Buraya gelen gövde unwrapData'dan geçmiş oluyor; data'yı ikinci kez
+    // soymak action'ı hep boş bırakıyor, yani toggleFavorite daima false.
+    // Her iki şekli de kabul et.
     final nested = json['data'];
     final data = nested is Map<String, dynamic> ? nested : json;
 

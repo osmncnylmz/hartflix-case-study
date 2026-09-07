@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sinflix/src/features/home/presentation/widgets/limited_offer_sheet.dart';
 import 'package:sinflix/src/features/movies/data/models/movie_dto.dart';
+import 'package:sinflix/src/features/movies/presentation/movie_display.dart';
 import '../../../../shared/styles/sinflix_theme.dart';
 import '../../../auth/domain/auth_repository.dart';
 import '../../../../app/di/injection.dart';
@@ -42,9 +43,7 @@ class _ProfilePageState extends State<ProfilePage> {
         name = me.name;
         email = me.email;
         photo = me.photoUrl;
-        favs = (list as List)
-            .map((e) => e is MovieDto ? e : MovieDto.fromJson(e))
-            .toList();
+        favs = list;
       });
     } catch (e) {
       setState(() => _error = 'Profil veya favoriler alınamadı: $e');
@@ -131,9 +130,9 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _openMovieDetail(MovieDto m) {
-    final title = _safeTitle(m);
-    final desc = _safeDesc(m);
-    final imgs = _safeImages(m);
+    final title = m.displayTitle;
+    final desc = m.description.trim();
+    final imgs = m.images.where((e) => e.isNotEmpty).toList();
 
     showModalBottomSheet(
       context: context,
@@ -173,7 +172,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           itemBuilder: (_, i) => ClipRRect(
                             borderRadius: BorderRadius.circular(12),
                             child: CachedNetworkImage(
-                              imageUrl: _fixUrl(imgs[i]),
+                              imageUrl: httpsUrl(imgs[i]),
                               fit: BoxFit.cover,
                               width: 240,
                               height: 160,
@@ -293,7 +292,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         radius: 34,
                         backgroundColor: const Color(0xFF2A2A2A),
                         foregroundImage: (photo != null && photo!.isNotEmpty)
-                            ? NetworkImage(_fixUrl(photo!))
+                            ? NetworkImage(httpsUrl(photo!))
                             : null,
                         child: (photo == null || photo!.isEmpty)
                             ? const Icon(
@@ -417,7 +416,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
 
-                // Boş durum
                 if (favs.isEmpty)
                   const SliverFillRemaining(
                     hasScrollBody: false,
@@ -434,8 +432,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     sliver: SliverGrid(
                       delegate: SliverChildBuilderDelegate((ctx, i) {
                         final m = favs[i];
-                        final poster = _bestPoster(m);
-                        final title = _safeTitle(m);
+                        final poster = m.bestPosterUrl;
+                        final title = m.displayTitle;
                         final year = m.year.trim();
 
                         return Material(
@@ -447,7 +445,6 @@ class _ProfilePageState extends State<ProfilePage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Poster
                                 Expanded(
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(12),
@@ -480,7 +477,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
                                 const SizedBox(height: 8),
-                                // Metinler
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 2,
@@ -534,60 +530,4 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
-}
-
-/// Yardımcılar
-
-String _safeTitle(MovieDto m) {
-  try {
-    final t = m.title.trim();
-    return t.isEmpty ? '—' : t;
-  } catch (_) {
-    return '—';
-  }
-}
-
-String _safeDesc(MovieDto m) {
-  try {
-    final d = m.description.trim();
-    return d;
-  } catch (_) {
-    return '';
-  }
-}
-
-List<String> _safeImages(MovieDto m) {
-  try {
-    final list = m.images;
-    return list.where((e) => e.isNotEmpty).toList();
-  } catch (_) {
-    return const <String>[];
-  }
-}
-
-/// http -> https
-String _fixUrl(String url) {
-  if (url.startsWith('http://')) return url.replaceFirst('http://', 'https://');
-  return url;
-}
-
-/// IMDB eski hostları 403 verebiliyor; https zorunlu; poster→images fallback
-String? _bestPoster(MovieDto m) {
-  final List<String> imgs = _safeImages(m);
-  final String poster = m.posterUrl.trim();
-
-  final candidates = <String>[if (poster.isNotEmpty) poster, ...imgs];
-
-  for (final raw in candidates) {
-    final fixed = _fixUrl(raw);
-    final uri = Uri.tryParse(fixed);
-    if (uri == null) continue;
-    if (uri.scheme != 'https') continue;
-
-    final host = uri.host.toLowerCase();
-    if (host.contains('ia.media-imdb.com')) continue; // 403’leri atla
-
-    return fixed;
-  }
-  return null;
 }

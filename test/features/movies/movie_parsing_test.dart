@@ -4,7 +4,6 @@ import 'package:sinflix/src/features/movies/data/movie_service.dart';
 
 void main() {
   group('MovieDto.fromJson', () {
-    // The catalogue is served with OMDb-style capitalised keys.
     test('maps the OMDb-style keys onto the DTO', () {
       final dto = MovieDto.fromJson(<String, dynamic>{
         'id': '5d4f9c1a',
@@ -25,7 +24,7 @@ void main() {
       expect(dto.images, hasLength(2));
     });
 
-    test('coerces a numeric id and year to String', () {
+    test('numeric id and year', () {
       final dto = MovieDto.fromJson(<String, dynamic>{'id': 7, 'Year': 1982});
 
       expect(dto.id, '7');
@@ -89,8 +88,8 @@ void main() {
   });
 
   group('ToggleFavoriteEnvelope.fromJson', () {
-    // `MovieService.toggleFavorite` runs the response through `unwrapData`
-    // first, so this is the shape the parser is actually handed in production.
+    // toggleFavorite runs the response through unwrapData first, so this is
+    // the shape the parser really sees.
     test('reads the movie and action from an already-unwrapped body', () {
       final env = ToggleFavoriteEnvelope.fromJson(<String, dynamic>{
         'movie': {'id': '1', 'Title': 'A'},
@@ -102,9 +101,7 @@ void main() {
       expect(env.action, 'favorited');
     });
 
-    // Regression guard: the parser used to unwrap `data` a second time, which
-    // left `action` empty for every real response and made
-    // `MoviesRepositoryImpl.toggleFavorite` always return false.
+    // Regression guard for the double-unwrap that used to leave action empty.
     test('also accepts a body whose "data" envelope is still attached', () {
       final env = ToggleFavoriteEnvelope.fromJson(<String, dynamic>{
         'data': {

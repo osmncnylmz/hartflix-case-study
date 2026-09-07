@@ -27,7 +27,6 @@ void main() {
 
     test('passes an empty map to the parser for a non-map body', () {
       final parsed = unwrapData<int>('not a map', (json) => json.length);
-
       expect(parsed, 0);
     });
 
@@ -44,8 +43,8 @@ void main() {
   });
 
   group('StringOrIntConverter', () {
-    // The API returns user ids as either a string or a number depending on
-    // the endpoint, so the converter normalises both to String.
+    // The user id comes back as a string from /user/login and as a number
+    // from /user/profile.
     const converter = StringOrIntConverter();
 
     test('keeps a string unchanged', () {
@@ -60,7 +59,7 @@ void main() {
       expect(converter.fromJson(null), '');
     });
 
-    test('round-trips back out as the same string', () {
+    test('toJson hands the string straight back', () {
       expect(converter.toJson('abc123'), 'abc123');
     });
   });

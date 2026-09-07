@@ -7,7 +7,7 @@ MovieDto _movie(String id) =>
 
 void main() {
   group('MoviesState', () {
-    test('starts empty, idle and open to a first page', () {
+    test('initial state', () {
       const state = MoviesState.initial();
 
       expect(state.items, isEmpty);

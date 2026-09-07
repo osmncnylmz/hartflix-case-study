@@ -1,20 +1,17 @@
-# The Dart package name stays `sinflix`: SINFLIX is the product name given in
-# the case-study brief, and it is used consistently across the theme classes,
-# asset names and the Android/iOS bundle identifiers (app.sinflix.sinflix).
-# `hartflix-case-study` is the name of the GitHub repository that hosts it.
-# See the "About the name" section of README.md.
+# Package name stays `sinflix`: the brief's product name, and what the theme
+# classes, the assets and the bundle id app.sinflix.sinflix all use. The repo
+# it lives in is called hartflix-case-study; see README, "About the name".
 name: sinflix
 description: >-
-  A Flutter case-study app for the SINFLIX brief: token-based auth, a swipeable
-  paginated movie feed with optimistic favourites, and a profile page with
-  photo upload — built on Bloc/Cubit, GoRouter, get_it/injectable and Dio.
+  SINFLIX case study: token auth, a swipeable paginated movie feed with
+  optimistic favourites, and a profile page with photo upload. Bloc/Cubit,
+  GoRouter, get_it + injectable, Dio.
 publish_to: 'none'
 
 version: 1.0.0+1
 
-# Matches the floor the committed pubspec.lock resolves to
-# (`sdks: dart ">=3.12.0 <4.0.0" / flutter ">=3.44.0"`), so the declared
-# constraint and the lockfile agree. Verified on Flutter 3.47.0 / Dart 3.13.0.
+# The floor the committed pubspec.lock resolves to, so constraint and lockfile
+# agree. Built and tested on Flutter 3.47.0 / Dart 3.13.0.
 environment:
   sdk: ^3.12.0
   flutter: ">=3.44.0"
@@ -33,26 +30,21 @@ dependencies:
   bloc: ^9.0.0
   equatable: ^2.0.7
 
-  # Routing
   go_router: ^16.2.0
 
-  # Dependency injection
   get_it: ^8.2.0
   injectable: ^2.5.1
 
-  # Networking
   dio: ^5.9.0
 
-  # Code-generated models
   freezed_annotation: ^3.1.0
   json_annotation: ^4.12.0
 
-  # UI
   cached_network_image: ^3.4.1
   google_fonts: ^6.3.0
 
-  # Secure token storage: iOS Keychain, Android EncryptedSharedPreferences
-  # (opted into explicitly in SecureTokenStore; it is not the plugin default)
+  # Keychain on iOS, EncryptedSharedPreferences on Android (opt-in, see
+  # SecureTokenStore)
   flutter_secure_storage: ^9.2.4
 
 dev_dependencies:

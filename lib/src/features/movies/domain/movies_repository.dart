@@ -1,20 +1,26 @@
 import '../data/models/movie_dto.dart';
-import 'movies_page.dart';
-
-export 'movies_page.dart';
 
 abstract class MoviesRepository {
-  /// One page of the catalogue. The implementation trims each page to the
-  /// fixed page size used by the Explore feed.
+  /// Explore'un sabit sayfa boyutuna kırpılmış tek sayfa
   Future<MoviesPage> page({int page = 1});
 
-  /// The movies the signed-in user has favourited.
   Future<List<MovieDto>> favorites();
 
-  /// Toggles the favourite flag for [movieId] and returns the new state
-  /// (`true` when the movie is now a favourite).
+  /// Toggle sonrası yeni durumu döner ("artık favori mi"), başarı flag'i değil
   Future<bool> toggleFavorite(String movieId);
 
-  /// A de-duplicated random selection drawn from across the catalogue.
+  /// Explore için rastgele filmler, tekrarsız
   Future<List<MovieDto>> randomMovies({int count = 6});
+}
+
+class MoviesPage {
+  final List<MovieDto> items;
+  final int currentPage;
+  final int totalPages;
+
+  MoviesPage({
+    required this.items,
+    required this.currentPage,
+    required this.totalPages,
+  });
 }

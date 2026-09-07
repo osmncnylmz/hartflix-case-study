@@ -106,7 +106,6 @@ class SocialButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
 
-  /// Opsiyoneller
   final double size; // kare boyut
   final Color background;
   final Color iconColor;

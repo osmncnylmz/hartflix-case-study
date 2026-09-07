@@ -30,8 +30,7 @@ jobs:
       - name: Resolve dependencies
         run: flutter pub get
 
-      # Generated sources (*.freezed.dart, *.g.dart, injection.config.dart)
-      # are committed, so CI does not need to run build_runner.
+      # No build_runner step: the generated sources are committed.
 
       - name: Verify formatting
         run: dart format --output=none --set-exit-if-changed .

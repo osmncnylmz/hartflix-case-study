@@ -61,7 +61,6 @@ class _LoginPageState extends State<LoginPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          // Başlık
                           Text(
                             'Merhaba 👋',
                             textAlign: TextAlign.center,
@@ -81,7 +80,6 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           const SizedBox(height: 32),
 
-                          // E-posta
                           SinflixField(
                             controller: _email,
                             hint: 'E-Posta',
@@ -93,7 +91,6 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           const SizedBox(height: 16),
 
-                          // Şifre
                           SinflixField(
                             controller: _password,
                             hint: 'Şifre',
@@ -124,7 +121,6 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           const SizedBox(height: 18),
 
-                          // Giriş butonu
                           SizedBox(
                             height: 52,
                             child: FilledButton(
@@ -160,7 +156,6 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           const SizedBox(height: 24),
 
-                          // Sosyal giriş
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -176,7 +171,6 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           const SizedBox(height: 28),
 
-                          // Kayıt linki
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [

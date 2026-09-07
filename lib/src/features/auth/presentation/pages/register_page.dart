@@ -62,7 +62,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          // Başlık
                           Text(
                             'Hoşgeldiniz 🎉',
                             textAlign: TextAlign.center,
@@ -82,7 +81,6 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           const SizedBox(height: 32),
 
-                          // Ad Soyad
                           SinflixField(
                             controller: _name,
                             hint: 'Ad Soyad',
@@ -92,7 +90,6 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           const SizedBox(height: 16),
 
-                          // E-posta
                           SinflixField(
                             controller: _email,
                             hint: 'E-Posta',
@@ -104,7 +101,6 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           const SizedBox(height: 16),
 
-                          // Şifre
                           SinflixField(
                             controller: _pass,
                             hint: 'Şifre',
@@ -117,7 +113,6 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           const SizedBox(height: 16),
 
-                          // Şifre tekrar
                           SinflixField(
                             controller: _pass2,
                             hint: 'Şifre Tekrar',
@@ -130,7 +125,6 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           const SizedBox(height: 18),
 
-                          // Kullanıcı sözleşmesi
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text.rich(
@@ -152,7 +146,6 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           const SizedBox(height: 22),
 
-                          // CTA
                           SizedBox(
                             height: 52,
                             child: FilledButton(
@@ -189,7 +182,6 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           const SizedBox(height: 24),
 
-                          // Sosyal giriş
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -205,7 +197,6 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           const SizedBox(height: 28),
 
-                          // Login linki
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
