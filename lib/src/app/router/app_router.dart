@@ -13,7 +13,7 @@ class AppRouter {
   GoRouter build(BuildContext context) {
     final auth = context.read<AuthCubit>();
 
-    bool _isAuth(GoRouterState s) =>
+    bool isAuth(GoRouterState s) =>
         s.matchedLocation == '/login' || s.matchedLocation == '/register';
 
     return GoRouter(
@@ -30,12 +30,12 @@ class AppRouter {
         }
 
         if (status == 'authenticated' &&
-            (state.matchedLocation == '/splash' || _isAuth(state))) {
+            (state.matchedLocation == '/splash' || isAuth(state))) {
           return '/home';
         }
 
         if (status == 'unauthenticated' &&
-            !(state.matchedLocation == '/splash' || _isAuth(state))) {
+            !(state.matchedLocation == '/splash' || isAuth(state))) {
           return '/login';
         }
 

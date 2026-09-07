@@ -14,7 +14,7 @@ class MovieService {
 
     return unwrapData<MovieListEnvelope>(
       res.data,
-      (json) => MovieListEnvelope.fromJson(json as Map<String, dynamic>),
+      (json) => MovieListEnvelope.fromJson(json),
     );
   }
 
@@ -32,7 +32,7 @@ class MovieService {
     final res = await _dio.post('/movie/favorite/$movieId');
     return unwrapData<ToggleFavoriteEnvelope>(
       res.data,
-      (json) => ToggleFavoriteEnvelope.fromJson(json as Map<String, dynamic>),
+      (json) => ToggleFavoriteEnvelope.fromJson(json),
     );
   }
 
@@ -118,10 +118,21 @@ class ToggleFavoriteEnvelope {
   ToggleFavoriteEnvelope({required this.movie, required this.action});
 
   factory ToggleFavoriteEnvelope.fromJson(Map<String, dynamic> json) {
-    final data = json['data'] as Map<String, dynamic>? ?? {};
+    // `MovieService.toggleFavorite` hands this an already-unwrapped body:
+    // `unwrapData` has stripped the `{"response": ..., "data": ...}` envelope,
+    // exactly as it does for `MovieListEnvelope`. Unwrapping a second time here
+    // used to leave `action` permanently empty, so `toggleFavorite` always
+    // reported "not favorited". Accept both shapes so the parser is correct
+    // whether or not the envelope has already been removed.
+    final nested = json['data'];
+    final data = nested is Map<String, dynamic> ? nested : json;
+
+    final movie = data['movie'];
     return ToggleFavoriteEnvelope(
-      movie: MovieDto.fromJson(data['movie'] ?? {}),
-      action: data['action'] ?? '',
+      movie: MovieDto.fromJson(
+        movie is Map<String, dynamic> ? movie : const <String, dynamic>{},
+      ),
+      action: (data['action'] ?? '').toString(),
     );
   }
 }

@@ -1,54 +1,57 @@
-# Miscellaneous
-*.class
-*.lock
-*.log
-*.pyc
+# ---------------------------------------------------------------------------
+# OS / editor noise
+# ---------------------------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
 *.swp
-.buildlog/
-.history
+*~
+*.log
 
+# JetBrains / Android Studio
+.idea/
+*.iml
+*.iws
+*.ipr
 
+# VS Code (keep shared settings if a team ever adds them, drop personal ones)
+.vscode/*
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
 
-# Flutter repo-specific
-/bin/cache/
-/bin/internal/bootstrap.bat
-/bin/internal/bootstrap.sh
-/bin/mingit/
-/dev/benchmarks/mega_gallery/
-/dev/bots/.recipe_deps
-/dev/bots/android_tools/
-/dev/devicelab/ABresults*.json
-/dev/docs/doc/
-/dev/docs/flutter.docs.zip
-/dev/docs/lib/
-/dev/docs/pubspec.yaml
-/dev/integration_tests/**/xcuserdata
-/dev/integration_tests/**/Pods
-/packages/flutter/coverage/
-version
-analysis_benchmark.json
-
-# packages file containing multi-root paths
-.packages.generated
-
-# Flutter/Dart/Pub related
-**/doc/api/
+# ---------------------------------------------------------------------------
+# Dart / Flutter
+# ---------------------------------------------------------------------------
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
-**/generated_plugin_registrant.dart
 .packages
-.pub-preload-cache/
+.pub-cache/
 .pub/
 build/
-flutter_*.png
-linked_*.ds
-unlinked.ds
-unlinked_spec.ds
+**/doc/api/
+**/generated_plugin_registrant.dart
 
-# Android related
+# NOTE: pubspec.lock IS committed. This is an application, not a library, so
+# the lockfile is what makes CI and local builds reproducible.
+
+# Coverage output
+coverage/
+lcov.info
+
+# Symbol files from `flutter build --split-debug-info`
+app.*.symbols
+
+# ---------------------------------------------------------------------------
+# Android
+# ---------------------------------------------------------------------------
 **/android/**/gradle-wrapper.jar
-.gradle/
+**/android/.gradle/
 **/android/captures/
 **/android/gradlew
 **/android/gradlew.bat
@@ -56,8 +59,11 @@ unlinked_spec.ds
 **/android/**/GeneratedPluginRegistrant.java
 **/android/key.properties
 *.jks
+*.keystore
 
-# iOS/XCode related
+# ---------------------------------------------------------------------------
+# iOS / Xcode
+# ---------------------------------------------------------------------------
 **/ios/**/*.mode1v3
 **/ios/**/*.mode2v3
 **/ios/**/*.moved-aside
@@ -72,7 +78,7 @@ unlinked_spec.ds
 **/ios/**/Pods/
 **/ios/**/.symlinks/
 **/ios/**/profile
-**/ios/**/xcuserdata
+**/ios/**/xcuserdata/
 **/ios/.generated/
 **/ios/Flutter/.last_build_id
 **/ios/Flutter/App.framework
@@ -87,12 +93,21 @@ unlinked_spec.ds
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
 
-# macOS
-**/Flutter/ephemeral/
+# ---------------------------------------------------------------------------
+# Cross-platform Xcode / CocoaPods / Flutter tooling output
+#
+# The repo currently ships only android/ and ios/, but these are kept
+# repo-wide (not scoped to **/ios/**) so adding a macOS, Windows or Linux
+# target later does not start committing Pods, per-user Xcode state or
+# generated plugin registrants.
+# ---------------------------------------------------------------------------
 **/Pods/
+**/xcuserdata/
+**/Flutter/ephemeral/
+
+# macOS
 **/macos/Flutter/GeneratedPluginRegistrant.swift
 **/macos/Flutter/ephemeral
-**/xcuserdata/
 
 # Windows
 **/windows/flutter/generated_plugin_registrant.cc
@@ -104,16 +119,8 @@ unlinked_spec.ds
 **/linux/flutter/generated_plugin_registrant.h
 **/linux/flutter/generated_plugins.cmake
 
-# Coverage
-coverage/
-
-# Symbols
-app.*.symbols
-
-# Exceptions to above rules.
+# Exceptions to the Xcode rules above
 !**/ios/**/default.mode1v3
 !**/ios/**/default.mode2v3
 !**/ios/**/default.pbxuser
 !**/ios/**/default.perspectivev3
-!/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
-!/dev/ci/**/Gemfile.lock

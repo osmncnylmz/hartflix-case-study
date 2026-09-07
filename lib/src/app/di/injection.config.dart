@@ -1,5 +1,5 @@
-// dart format width=80
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format width=80
 
 // **************************************************************************
 // InjectableConfigGenerator
@@ -9,6 +9,7 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+
 import 'package:dio/dio.dart' as _i361;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
@@ -36,14 +37,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i361.Dio>(
       () => networkModule.dio(gh<_i762.SecureTokenStore>()),
     );
-    gh.lazySingleton<_i786.MovieService>(
-      () => _i786.MovieService(gh<_i361.Dio>()),
-    );
     gh.lazySingleton<_i523.AuthService>(
       () => _i523.AuthService(gh<_i361.Dio>(), gh<_i762.SecureTokenStore>()),
     );
-    gh.lazySingleton<_i868.MoviesRepository>(
-      () => _i890.MoviesRepositoryImpl(gh<_i786.MovieService>()),
+    gh.lazySingleton<_i786.MovieService>(
+      () => _i786.MovieService(gh<_i361.Dio>()),
     );
     gh.lazySingleton<_i608.AuthRepository>(
       () => _i684.AuthRepositoryImpl(
@@ -51,6 +49,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i762.SecureTokenStore>(),
         gh<_i786.MovieService>(),
       ),
+    );
+    gh.lazySingleton<_i868.MoviesRepository>(
+      () => _i890.MoviesRepositoryImpl(gh<_i786.MovieService>()),
     );
     return this;
   }

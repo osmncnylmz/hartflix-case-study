@@ -88,6 +88,7 @@ class _ProfileUploadPageState extends State<ProfileUploadPage> {
                           final url = await getIt<AuthRepository>().uploadPhoto(
                             img.path,
                           );
+                          if (!context.mounted) return;
                           setState(() => photoUrl = url);
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Fotoğraf yüklendi')),

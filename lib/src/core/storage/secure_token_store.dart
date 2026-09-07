@@ -3,7 +3,12 @@ import 'package:injectable/injectable.dart';
 
 @lazySingleton
 class SecureTokenStore {
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  // `encryptedSharedPreferences` is opt-in: without it the Android backend
+  // falls back to the legacy KeyStore-wrapped SharedPreferences. The app's
+  // minSdk is Flutter's default (24), comfortably above the API 23 this needs.
+  final FlutterSecureStorage _storage = const FlutterSecureStorage(
+    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+  );
 
   static const _kAccess = 'access_token';
   static const _kRefresh = 'refresh_token';

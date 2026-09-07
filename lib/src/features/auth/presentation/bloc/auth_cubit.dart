@@ -12,7 +12,9 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> check() async {
     final ok = await _repo.isLoggedIn();
-    emit(ok ? const AuthState.authenticated() : const AuthState.unauthenticated());
+    emit(
+      ok ? const AuthState.authenticated() : const AuthState.unauthenticated(),
+    );
   }
 
   Future<void> login(String email, String password) async {

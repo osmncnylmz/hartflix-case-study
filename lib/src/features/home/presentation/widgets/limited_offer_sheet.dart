@@ -149,7 +149,7 @@ class _BonusRow extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(.06),
+        color: Colors.white.withValues(alpha: .06),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: Colors.white24, width: 1),
       ),
@@ -215,7 +215,6 @@ class _PackCard extends StatelessWidget {
   final bool highlight;
 
   const _PackCard({
-    super.key,
     required this.badgeText,
     required this.gradientA,
     required this.gradientB,
@@ -243,13 +242,13 @@ class _PackCard extends StatelessWidget {
             boxShadow: [
               if (highlight)
                 BoxShadow(
-                  color: gradientB.withOpacity(.35),
+                  color: gradientB.withValues(alpha: .35),
                   blurRadius: 20,
                   spreadRadius: 1,
                 )
               else
                 BoxShadow(
-                  color: Colors.black.withOpacity(.18),
+                  color: Colors.black.withValues(alpha: .18),
                   blurRadius: 12,
                   offset: const Offset(0, 6),
                 ),
@@ -302,11 +301,14 @@ class _PackCard extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(.22),
+              color: Colors.white.withValues(alpha: .22),
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: Colors.white.withOpacity(.35)),
+              border: Border.all(color: Colors.white.withValues(alpha: .35)),
               boxShadow: [
-                BoxShadow(color: Colors.black.withOpacity(.12), blurRadius: 6),
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: .12),
+                  blurRadius: 6,
+                ),
               ],
             ),
             child: Text(

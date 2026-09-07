@@ -54,7 +54,7 @@ class SinflixTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: fieldDark,
-        hintStyle: TextStyle(color: Colors.white.withOpacity(.6)),
+        hintStyle: TextStyle(color: Colors.white.withValues(alpha: .6)),
         labelStyle: const TextStyle(color: Colors.white70),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 18,
@@ -86,9 +86,9 @@ class PillsNav extends StatelessWidget {
             filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(.85),
+                color: Colors.black.withValues(alpha: .85),
                 borderRadius: BorderRadius.circular(28),
-                border: Border.all(color: Colors.white.withOpacity(.06)),
+                border: Border.all(color: Colors.white.withValues(alpha: .06)),
               ),
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
               child: Row(

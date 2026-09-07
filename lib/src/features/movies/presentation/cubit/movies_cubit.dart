@@ -24,7 +24,7 @@ class MoviesCubit extends Cubit<MoviesState> {
       _items.clear();
 
       final p = await _repo.page(page: _page);
-      _maxPage = (p.totalPages ?? 1);
+      _maxPage = p.totalPages;
       _items.addAll(p.items);
 
       emit(
@@ -51,7 +51,7 @@ class MoviesCubit extends Cubit<MoviesState> {
 
     try {
       final p = await _repo.page(page: _page);
-      _maxPage = (p.totalPages ?? _maxPage); //  burada da totalPages
+      _maxPage = p.totalPages;
 
       _items.addAll(p.items);
 
@@ -106,15 +106,21 @@ class MoviesCubit extends Cubit<MoviesState> {
   }
 
   /// Favori toggle
+  ///
+  /// [MoviesRepository.toggleFavorite] returns the *new* state (`true` when the
+  /// movie is now a favourite), so it is applied directly instead of being
+  /// treated as a success flag — reading it as "did it work?" meant an
+  /// un-favourite left the id in [MoviesState.favIds].
+  /// Errors are left to propagate: the Explore page rolls its optimistic
+  /// change back when this throws.
   Future<void> toggleFavorite(String movieId) async {
-    final ok = await _repo.toggleFavorite(movieId);
-    if (!ok) return;
+    final isFavoriteNow = await _repo.toggleFavorite(movieId);
 
     final favs = Set<String>.from(state.favIds);
-    if (favs.contains(movieId)) {
-      favs.remove(movieId);
-    } else {
+    if (isFavoriteNow) {
       favs.add(movieId);
+    } else {
+      favs.remove(movieId);
     }
     emit(state.copyWith(favIds: favs));
   }

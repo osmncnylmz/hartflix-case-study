@@ -218,7 +218,7 @@ class _ExplorePageState extends State<ExplorePage>
                                   vertical: 8,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(.4),
+                                  color: Colors.black.withValues(alpha: .4),
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(color: Colors.white12),
                                 ),
@@ -335,7 +335,7 @@ class _ExplorePageState extends State<ExplorePage>
 
 String _safeTitle(MovieDto m) {
   try {
-    final t = (m.title ?? '').trim();
+    final t = m.title.trim();
     return t.isEmpty ? '—' : t;
   } catch (_) {
     return '—';
@@ -344,7 +344,7 @@ String _safeTitle(MovieDto m) {
 
 String _safeDesc(MovieDto m) {
   try {
-    final d = (m.description ?? '').trim();
+    final d = m.description.trim();
     return d;
   } catch (_) {
     return '';
@@ -353,7 +353,7 @@ String _safeDesc(MovieDto m) {
 
 List<String> _safeImages(MovieDto m) {
   try {
-    final list = (m.images ?? const <String>[]);
+    final list = m.images;
     return list.where((e) => e.isNotEmpty).toList();
   } catch (_) {
     return const <String>[];
@@ -369,7 +369,7 @@ String _fixUrl(String url) {
 /// IMDB eski hostları 403 verebiliyor; https zorunlu; poster→images fallback
 String? _bestPoster(MovieDto m) {
   final List<String> imgs = _safeImages(m);
-  final String poster = (m.posterUrl ?? '').trim();
+  final String poster = m.posterUrl.trim();
 
   final candidates = <String>[if (poster.isNotEmpty) poster, ...imgs];
 
@@ -413,7 +413,7 @@ class _HeroCardState extends State<_HeroCard> {
     );
     final bodyStyle = Theme.of(
       context,
-    ).textTheme.bodyMedium?.copyWith(color: Colors.white.withOpacity(.9));
+    ).textTheme.bodyMedium?.copyWith(color: Colors.white.withValues(alpha: .9));
 
     final posterOrFallback = _bestPoster(widget.movie);
     final title = _safeTitle(widget.movie);
@@ -469,7 +469,7 @@ class _HeroCardState extends State<_HeroCard> {
                       width: 52,
                       height: 52,
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(18),
                         border: Border.all(color: Colors.white24, width: 1),
                       ),

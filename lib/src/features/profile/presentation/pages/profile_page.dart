@@ -1,6 +1,4 @@
-import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sinflix/src/features/home/presentation/widgets/limited_offer_sheet.dart';
@@ -438,7 +436,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         final m = favs[i];
                         final poster = _bestPoster(m);
                         final title = _safeTitle(m);
-                        final year = (m.year ?? '').trim();
+                        final year = m.year.trim();
 
                         return Material(
                           color: Colors.transparent,
@@ -542,7 +540,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
 String _safeTitle(MovieDto m) {
   try {
-    final t = (m.title ?? '').trim();
+    final t = m.title.trim();
     return t.isEmpty ? '—' : t;
   } catch (_) {
     return '—';
@@ -551,7 +549,7 @@ String _safeTitle(MovieDto m) {
 
 String _safeDesc(MovieDto m) {
   try {
-    final d = (m.description ?? '').trim();
+    final d = m.description.trim();
     return d;
   } catch (_) {
     return '';
@@ -560,7 +558,7 @@ String _safeDesc(MovieDto m) {
 
 List<String> _safeImages(MovieDto m) {
   try {
-    final list = (m.images ?? const <String>[]);
+    final list = m.images;
     return list.where((e) => e.isNotEmpty).toList();
   } catch (_) {
     return const <String>[];
@@ -576,7 +574,7 @@ String _fixUrl(String url) {
 /// IMDB eski hostları 403 verebiliyor; https zorunlu; poster→images fallback
 String? _bestPoster(MovieDto m) {
   final List<String> imgs = _safeImages(m);
-  final String poster = (m.posterUrl ?? '').trim();
+  final String poster = m.posterUrl.trim();
 
   final candidates = <String>[if (poster.isNotEmpty) poster, ...imgs];
 
